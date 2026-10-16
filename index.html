@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaffSimulator — Mazhab al-Syafie & Malaysian Fatwa Congregation Visualizer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-group">
+        <h1 class="brand-title"><span class="brand-saff">Saff</span><span class="brand-sim">Simulator</span></h1>
+        <span class="brand-subtitle">Mazhab al-Syafie &amp; Malaysian Fatwa 2D Surau Model</span>
+      </div>
+    </header>
+
+    <!-- Main Split View: 3:4 Left Simulation, 1:4 Right Controls -->
+    <div class="main-content">
+      <!-- Left (3:4): 2D Top-Down Square Surau -->
+      <section class="sim-column" aria-label="2D Top-Down Surau Floor Plan">
+        <div class="canvas-wrapper">
+          <canvas id="surauCanvas" width="420" height="420"></canvas>
+        </div>
+
+        <div class="legend-bar">
+          <span class="legend-item"><span class="legend-dot" style="background:#7c5c20;"></span>Imam</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#3c5e35;"></span>Man</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#2e607a;"></span>Boy</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#844969;"></span>Woman</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#b56589;"></span>Girl</span>
+          <span class="legend-item"><span class="legend-square" style="background:#965a25;"></span>Chair</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#6e5034;border-radius:3px;"></span>Floor Seated</span>
+        </div>
+      </section>
+
+      <!-- Right (1:4): Compact Controls -->
+      <section class="controls-column" aria-label="Simulation Controls">
+        <!-- Live Counts -->
+        <div class="stats-strip">
+          <div class="stat-box">
+            <div class="stat-num" id="statTotal">0</div>
+            <div class="stat-lbl">Total Jemaah</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="statMen">0</div>
+            <div class="stat-lbl">Men &amp; Boys</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="statWomen">0</div>
+            <div class="stat-lbl">Women &amp; Girls</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" id="statChair">0</div>
+            <div class="stat-lbl">Chair / Seated</div>
+          </div>
+        </div>
+
+        <!-- 1. Add Jemaah to Congregation + Presets -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2 class="section-title">1. Add Jemaah to Congregation</h2>
+          </div>
+          <div class="btn-grid">
+            <button type="button" class="sim-btn btn-man" id="btnAddMan">+ Add Man</button>
+            <button type="button" class="sim-btn btn-woman" id="btnAddWoman">+ Add Woman</button>
+            <button type="button" class="sim-btn btn-boy" id="btnAddBoy">+ Add Boy</button>
+            <button type="button" class="sim-btn btn-girl" id="btnAddGirl">+ Add Girl</button>
+            <button type="button" class="sim-btn btn-chair" id="btnAddManChair">+ Man (Chair)</button>
+            <button type="button" class="sim-btn btn-chair" id="btnAddManFloor">+ Man (Floor)</button>
+            <button type="button" class="sim-btn btn-chair" id="btnAddWomanChair">+ Woman (Chair)</button>
+            <button type="button" class="sim-btn btn-man" id="btnAddBatchMen">+ Fill 5 Men</button>
+          </div>
+          <div class="options-row">
+            <div class="btn-grid-3">
+              <button type="button" class="sim-btn btn-preset" id="btnPreset1on1">1 Imam 1 Man</button>
+              <button type="button" class="sim-btn btn-preset" id="btnPresetFull">Full</button>
+              <button type="button" class="sim-btn btn-reset" id="btnReset">Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Trigger Mid-Prayer Scenarios -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2 class="section-title">2. Trigger Mid-Prayer Scenarios</h2>
+          </div>
+          <div class="btn-grid">
+            <button type="button" class="sim-btn btn-event" id="btnImamBreaks">Imam Breaks Wudhu</button>
+            <button type="button" class="sim-btn btn-event" id="btnMakmumFaints">Jemaah Faints</button>
+          </div>
+        </div>
+
+        <!-- 3. Fiqh & Surau Rules Configuration -->
+        <div class="section-card">
+          <div class="section-header">
+            <h2 class="section-title">3. Fiqh &amp; Surau Rules</h2>
+          </div>
+          <div class="options-row" style="border-top:none;margin-top:0;padding-top:0;">
+            <label class="toggle-label">
+              <span>Women Partition (Tabir)</span>
+              <input type="checkbox" id="chkPartition" checked />
+            </label>
+            <label class="toggle-label">
+              <span>Masbuq Pulls Partner</span>
+              <input type="checkbox" id="chkAutoPull" checked />
+            </label>
+          </div>
+          <div class="options-row">
+            <label class="toggle-label">
+              <span>Boys:</span>
+              <select id="selBoysMode" class="select-compact">
+                <option value="row_behind">Row Behind Men</option>
+                <option value="interspersed">Beside Adults</option>
+              </select>
+            </label>
+            <label class="toggle-label">
+              <span>Girls:</span>
+              <select id="selGirlsMode" class="select-compact">
+                <option value="with_women">With Women</option>
+                <option value="behind_women">Row Behind Women</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
